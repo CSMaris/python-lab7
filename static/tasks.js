@@ -64,6 +64,8 @@ $(document).ready(function () {
             "contentType": "application/json",
             "success": function(){reloadTasks()}
         })
+            document.getElementById("addTask").setAttribute("value","Add")
+             document.getElementById("info").value=""
 
 
             return false;
@@ -76,6 +78,7 @@ $(document).ready(function () {
 function reloadTasks()
 {
     $("#tasklist").empty()
+
 
 
     $("#tasklist").append("<ul></ul>");
