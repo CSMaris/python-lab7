@@ -41,7 +41,7 @@ def get_tasks():
     # return the task data
     return jsonify({'tasks': tasks})
 
-@app.route('/api/v1.0/tasks/<int:task_id>', methods=['GET'])
+@app.route('/api/v1.0/getTask/<int:task_id>', methods=['GET'])
 def get_task(task_id):
     # get the task
     task = db_interaction.get_task(int(task_id))

@@ -89,7 +89,7 @@ def get_task(id_task):
     conn = pymysql.connect(user='root', password='qwertyuiop',
                            database='tasks', host='localhost')
 
-    # to remove u from sqlite3 cursor.fetchall() results
+
 
 
     cursor = conn.cursor()

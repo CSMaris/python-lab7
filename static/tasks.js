@@ -64,8 +64,8 @@ function reloadTasks()
             var x=document.getElementsByName("delete")[i]
             var y=document.getElementsByName("update")[i]
 
-            x.setAttribute("id",t.id)
-            y.setAttribute("id", t.id)
+            x.id=t.id
+            y.id=t.id
 
         }
 
@@ -82,6 +82,32 @@ $.post({
             "contentType": "application/json",
             "success": function(){reloadTasks()}
         }) ;
+
+}
+
+function updateTask(t){
+    url="http://127.0.0.1:5000/api/v1.0/getTask/"+t.getAttribute("id")
+    document.getElementById("addTask").setAttribute("value","Update")
+
+
+
+     $.getJSON(url, function(data) {
+
+
+         desc=data['task'].description
+         document.getElementById("taskDescription").value=desc
+         document.getElementById("info").value=t.getAttribute("id")
+
+         urg=data['task'].urgent
+
+         if(parseInt(urg)==1)
+             document.getElementById("taskUrgent").checked=true
+         else
+             document.getElementById("taskUrgent").checked=false
+
+     })
+
+
 
 }
 
