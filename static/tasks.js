@@ -21,7 +21,8 @@ $(document).ready(function () {
     }) ;
 
     $("#addForm").submit( function(){
-      var nome = $("#taskDescription").val()
+        if(document.getElementById("addTask").value =="Add") {
+            var nome = $("#taskDescription").val()
 
             var urgency = $("#taskUrgent").is(":checked")
 
@@ -36,10 +37,38 @@ $(document).ready(function () {
                 "url": 'http://127.0.0.1:5000/api/v1.0/newTask',
                 "data": json,
                 "contentType": "application/json",
-                "success": function () {reloadTasks(task)}
+                "success": function () {
+                    reloadTasks(task)
+                }
             });
 
             return false;
+        }
+        else{
+            var id=document.getElementById("info").value
+
+
+          var nome=$("#taskDescription").val()
+
+          var urgency =$("#taskUrgent").is(":checked")
+          task = { "id": id, "description": nome, "urgent": urgency};
+
+
+         json =  JSON.stringify(task) ;
+
+
+
+  $.post({
+            "url":'http://127.0.0.1:5000/api/v1.0/updateTask',
+            "data": json,
+            "contentType": "application/json",
+            "success": function(){reloadTasks()}
+        })
+
+
+            return false;
+
+        }
 
     }) ;
 });

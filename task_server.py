@@ -75,15 +75,20 @@ def insert_task():
 @app.route('/api/v1.0/updateTask', methods=['POST'])
 def update_task():
 
+
     # get the request body
     add_request = request.json
 
+
     # check whether a task is present in the request or not
     if add_request is not None and ('description' and 'urgent') in add_request:
+
         text = add_request['description']
         urgent = add_request['urgent']
+        id = add_request['id']
         # update the task
-        task = db_interaction.update_task(int(task_id),text,urgent)
+        db_interaction.update_task(int(id),text,urgent)
+
 
         return Response(status=200)
 
