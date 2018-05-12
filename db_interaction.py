@@ -16,7 +16,8 @@ limitations under the License
 @author: Teodoro Montanaro, Luigi De Russis, Alberto Monge Roffarello
 """
 
-import sqlite3
+import pymysql
+
 
 
 def insert_task(text, urgent):
@@ -28,10 +29,11 @@ def insert_task(text, urgent):
     """
 
     # prepare the query
-    sql = """INSERT INTO task(todo, urgent) VALUES (?, ?)"""
+    sql = """INSERT INTO tasks(text, urgent) VALUES (%s, %s)"""
 
     # connect to the db
-    conn = sqlite3.connect("db/task_list.db")
+    conn = pymysql.connect(user='root', password='qwertyuiop',
+                           database='tasks', host='localhost')
     cursor = conn.cursor()
 
     try:
@@ -54,11 +56,11 @@ def get_tasks():
     """
 
     tasks = []
-    sql = "SELECT id_task, todo, urgent  FROM task"
-    conn = sqlite3.connect("db/task_list.db")
+    sql = "SELECT id_task, text, urgent  FROM tasks"
+    conn = pymysql.connect(user='root', password='qwertyuiop',
+                           database='tasks', host='localhost')
 
-    # to remove u from sqlite3 cursor.fetchall() results
-    conn.text_factory = sqlite3.OptimizedUnicode
+    #
 
     cursor = conn.cursor()
     cursor.execute(sql)
@@ -81,13 +83,14 @@ def get_task(id_task):
     """
 
     # prepare the query
-    sql = "SELECT id_task, todo, urgent FROM task WHERE id_task = ?"
+    sql = "SELECT id_task, text, urgent FROM tasks WHERE id_task = %s"
 
     # connect to the db
-    conn = sqlite3.connect("db/task_list.db")
+    conn = pymysql.connect(user='root', password='qwertyuiop',
+                           database='tasks', host='localhost')
 
     # to remove u from sqlite3 cursor.fetchall() results
-    conn.text_factory = sqlite3.OptimizedUnicode
+
 
     cursor = conn.cursor()
     cursor.execute(sql, (id_task, ))
@@ -108,10 +111,11 @@ def remove_task_by_id(id_task):
     """
 
     # prepare the query
-    sql = "DELETE FROM task WHERE id_task = ?"
+    sql = "DELETE FROM tasks WHERE id_task = %s"
 
     # connect to the db
-    conn = sqlite3.connect("db/task_list.db")
+    conn = pymysql.connect(user='root', password='qwertyuiop',
+                           database='tasks', host='localhost')
     cursor = conn.cursor()
 
     try:
@@ -138,10 +142,11 @@ def update_task(id_task, text, urgent):
     """
 
     # prepare the query
-    sql = """UPDATE task SET todo=?, urgent=? WHERE id_task = ?"""
+    sql = """UPDATE tasks SET text=%s, urgent=%s WHERE id_task = %s"""
 
     # connect to the db
-    conn = sqlite3.connect("db/task_list.db")
+    conn = pymysql.connect(user='root', password='qwertyuiop',
+                           database='tasks', host='localhost')
     cursor = conn.cursor()
 
     try:
@@ -159,29 +164,3 @@ def update_task(id_task, text, urgent):
 
 
 
-def get_filtered_tasks(search_substring):
-    """
-    :param search_substring: it represents the string that will be used as filter for tasks
-
-    Get filtered existing tasks from the database
-    """
-
-    tasks = []
-    sql = "SELECT id_task, todo, urgent  FROM task WHERE todo LIKE ?"
-    text = "%"+search_substring + "%"
-    conn = sqlite3.connect("db/task_list.db")
-
-    # to remove u from sqlite3 cursor.fetchall() results
-    conn.text_factory = sqlite3.OptimizedUnicode
-
-    cursor = conn.cursor()
-    cursor.execute(sql, (text, ) )
-
-    results = cursor.fetchall()
-
-    for task in results:
-        tasks.append(task)
-
-    conn.close()
-
-    return tasks

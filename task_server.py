@@ -10,6 +10,8 @@ Last updated on Apr 30, 2018
 from flask import Flask, jsonify, abort, request, Response, render_template
 from flask_bootstrap import Bootstrap
 
+
+
 import db_interaction
 
 app = Flask(__name__)
@@ -17,7 +19,7 @@ Bootstrap(app)
 
 # ---------- FRONT-END Single-page application ------------
 
-@app.route('/tasks.html')
+@app.route('/')
 def tasks():
     return render_template("tasks.html")
 
@@ -52,7 +54,7 @@ def get_task(task_id):
     return jsonify({'task': prepare_for_json(task)})
 
 
-@app.route('/api/v1.0/tasks', methods=['POST'])
+@app.route('/api/v1.0/newTask', methods=['POST'])
 def insert_task():
     # get the request body
     add_request = request.json
@@ -70,8 +72,8 @@ def insert_task():
     # return an error in case of problems
     abort(403)
 
-@app.route('/api/v1.0/tasks/<int:task_id>', methods=['PUT'])
-def update_task(task_id):
+@app.route('/api/v1.0/updateTask', methods=['POST'])
+def update_task():
 
     # get the request body
     add_request = request.json
@@ -88,11 +90,12 @@ def update_task(task_id):
     # return an error in case of problems
     abort(403)
 
-@app.route('/api/v1.0/tasks/<int:task_id>', methods=['DELETE'])
-def delete_task(task_id):
+@app.route('/api/v1.0/deleteTask', methods=['POST'])
+def delete_task():
+    id=request.json
 
     # delete the task
-    task = db_interaction.remove_task_by_id(int(task_id))
+    task = db_interaction.remove_task_by_id(int(id))
 
     return Response(status=200)
 
